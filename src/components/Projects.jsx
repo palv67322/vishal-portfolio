@@ -85,8 +85,9 @@ const projectsData = [
     ],
     tags: ['Python', 'Media Processing', 'Desktop GUI', 'Automation'],
     image: 'https://placehold.co/800x600/e0e7ff/4f46e5?text=Python+Video+Player',
-    screenshots: ['src/assets/Advanced Video Player/image1.png','src/assets/Advanced Video Player/image2.png',
-      'src/assets/Advanced Video Player/image3.png'
+    screenshots: ['/projects/Advanced Video Player/image1.png',
+    '/projects/Advanced Video Player/image2.png',
+    '/projects/Advanced Video Player/image3.png'
     ],
     liveUrl: '#',
     githubUrl: '#',
