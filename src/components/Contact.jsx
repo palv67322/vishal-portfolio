@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FaEnvelope, FaLinkedin, FaGithub, FaMapMarkerAlt } from 'react-icons/fa';
-import api from '../api'; // Humara banaya hua axios config
+
 import toast from 'react-hot-toast';
 
 function Contact() {
@@ -19,25 +19,39 @@ function Contact() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Form Submit karne ka function
+// Form Submit karne ka function (Naya Web3Forms API ke sath - Render Bypassed)
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Page refresh hone se roke
+    e.preventDefault();
     setIsSubmitting(true);
     const toastId = toast.loading('Sending message...');
 
     try {
-      // Backend ko API call
-      const response = await api.post('/contact', formData);
-      
-      toast.success(response.data.success || 'Message sent successfully!', { id: toastId });
-      
-      // Form ko wapas khali kar do
-      setFormData({ name: '', email: '', message: '' });
-      
+      // Direct Web3Forms API ko HTTP request bhej rahe hain
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: "3522b160-2ab5-4f5e-abb8-8efb3a27332e", // <-- Apna email wala Access Key yahan paste kar
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success('Message sent successfully!', { id: toastId });
+        setFormData({ name: '', email: '', message: '' }); // Form clear
+      } else {
+        toast.error('Failed to send message.', { id: toastId });
+      }
     } catch (error) {
       console.error(error);
-      const errorMsg = error.response?.data?.error || 'Failed to send message.';
-      toast.error(errorMsg, { id: toastId });
+      toast.error('Failed to send message.', { id: toastId });
     } finally {
       setIsSubmitting(false);
     }
